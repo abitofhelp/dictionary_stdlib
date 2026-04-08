@@ -100,7 +100,8 @@ package body Dictionary.Router is
       if not Dictionary.Validation.Is_Valid_Key (Key_Str) then
          return Error_Response
            (Bad_Request_400,
-            "The key contains invalid characters.");
+            "The key is invalid or exceeds"
+            & " 50 characters.");
       end if;
 
       declare
@@ -143,15 +144,14 @@ package body Dictionary.Router is
       if not Dictionary.Validation.Is_Valid_Key (Key_S) then
          return Error_Response
            (Bad_Request_400,
-            "The key contains invalid characters"
-            & " or exceeds 50 characters.");
+            "The key is invalid or exceeds"
+            & " 50 characters.");
       end if;
 
       if not Dictionary.Validation.Is_Valid_Value (Val_S) then
          return Error_Response
            (Bad_Request_400,
-            "The value is empty, contains"
-            & " non-printable characters,"
+            "The value is empty, non-printable,"
             & " or exceeds 200 characters.");
       end if;
 
@@ -204,7 +204,8 @@ package body Dictionary.Router is
       if not Dictionary.Validation.Is_Valid_Key (Key_Str) then
          return Error_Response
            (Bad_Request_400,
-            "The key contains invalid characters.");
+            "The key is invalid or exceeds"
+            & " 50 characters.");
       end if;
 
       declare
@@ -220,16 +221,21 @@ package body Dictionary.Router is
          end if;
 
          --  If a "key" field is present in the body, it must
-         --  match the URL key (case-insensitive comparison via
-         --  Key_Text normalization).
+         --  be valid AND match the URL key.
          declare
             Body_Key_S : constant String :=
               To_String (Parsed.Key_Str);
          begin
-            if Body_Key_S'Length > 0
-              and then Dictionary.Validation.Is_Valid_Key
-                         (Body_Key_S)
-            then
+            if Body_Key_S'Length > 0 then
+               if not Dictionary.Validation.Is_Valid_Key
+                        (Body_Key_S)
+               then
+                  return Error_Response
+                    (Bad_Request_400,
+                     "The key in the request body"
+                     & " is invalid.");
+               end if;
+
                declare
                   URL_Key  : constant Key_Text.Text :=
                     Key_Text.Create (Key_Str);
@@ -239,8 +245,8 @@ package body Dictionary.Router is
                   if URL_Key /= Body_Key then
                      return Error_Response
                        (Bad_Request_400,
-                        "The key in the body does not"
-                        & " match the URL.");
+                        "The key in the request body"
+                        & " does not match the URL.");
                   end if;
                end;
             end if;
@@ -296,7 +302,8 @@ package body Dictionary.Router is
       if not Dictionary.Validation.Is_Valid_Key (Key_Str) then
          return Error_Response
            (Bad_Request_400,
-            "The key contains invalid characters.");
+            "The key is invalid or exceeds"
+            & " 50 characters.");
       end if;
 
       declare

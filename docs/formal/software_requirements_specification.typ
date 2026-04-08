@@ -8,6 +8,12 @@
 // Modification Policy:
 //   - Edit this file for project-specific SRS content.
 //   - Keep shared presentation logic in core.typ.
+// Table Ordering:
+//   Sort any table whose rows a reader might scan to locate a specific
+//   entry — definitions, acronyms, constraints, packages, interfaces,
+//   and similar reference tables.  Sort alphabetically by the first
+//   column.  Tables with an inherent sequence (requirement IDs within
+//   a section, change history, workflow steps) retain their logical order.
 // SPDX-License-Identifier: BSD-3-Clause
 // ============================================================================
 
@@ -284,7 +290,7 @@ None.
 #table(
   columns: (auto, 1fr),
   table.header([*ID*], [*Requirement*]),
-  [FR-03.1], [The service shall parse HTTP/1.1 request lines (method, path, version).],
+  [FR-03.1], [The service shall parse HTTP/1.1 request lines (method, path, version). Note: this is a deliberately simplified HTTP/1.1 subset; the version token is not validated.],
   [FR-03.2], [The service shall parse the Content-Length header to determine body size.],
   [FR-03.3], [The service shall support GET, POST, PUT, and DELETE methods.],
   [FR-03.4], [Unknown methods shall produce a Method_Unknown parse result.],
@@ -426,7 +432,7 @@ dictionary_main -> server -> router -> http, json, store, validation -> types ->
   table.header([*Method*], [*Description*]),
   [Unit Tests], [99 tests covering validation, bounded text, JSON, HTTP, and store.],
   [Integration Tests], [26 tests exercising the router pipeline end-to-end.],
-  [E2E Tests], [27 tests via curl against a running server.],
+  [E2E Tests], [28 tests via curl against a running server.],
   [Docker Tests], [`make docker-test` builds and exercises the production image.],
   [Build Verification], [Clean build with `-gnatwa` (all warnings) and strict style checks.],
 )

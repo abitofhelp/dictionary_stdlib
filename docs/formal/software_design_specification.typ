@@ -233,7 +233,7 @@ A single protected object (`Dictionary_Store`) declared at package level in `Dic
 
 The HTTP package handles two concerns:
 
-1. *Parsing*: `Parse_Request` scans raw bytes for the request line (`METHOD PATH HTTP/1.1`), extracts headers (specifically `Content-Length`), and copies the body. Uses fixed-size buffers (256 bytes for path, 4096 for body).
+1. *Parsing*: `Parse_Request` scans raw bytes for the request line (`METHOD PATH HTTP/1.1`), extracts headers (specifically `Content-Length`), and copies the body. Uses fixed-size buffers (256 bytes for path, 4096 for body). This is a deliberately simplified HTTP/1.1 subset: the version token is parsed but not validated, and only `Content-Length` framing is supported (no chunked transfer encoding).
 
 2. *Formatting*: `Format_Response` builds a complete HTTP/1.1 response string including status line, `Content-Type`, `Content-Length`, `Connection: close`, and body.
 
@@ -365,7 +365,7 @@ Image size: ~93 MB.
   table.header([*Suite*], [*Count*], [*Scope*]),
   [Unit], [99], [Validation, Bounded_Text, JSON, HTTP parsing, Store operations],
   [Integration], [26], [Router pipeline: request record in, response record out],
-  [E2E], [27], [curl against a running server, all endpoints and error paths],
+  [E2E], [28], [curl against a running server, all endpoints and error paths],
 )
 
 == Test Infrastructure

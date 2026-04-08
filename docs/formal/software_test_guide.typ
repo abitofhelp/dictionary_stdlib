@@ -86,7 +86,7 @@ This document covers:
   table.header([*Category*], [*Location*], [*Count*], [*Purpose*]),
   [Unit], [`test/unit/`], [99], [Verify individual packages in isolation.],
   [Integration], [`test/integration/`], [26], [Verify the router pipeline (request to response).],
-  [End-to-End], [`test/e2e/`], [27], [Verify all endpoints via HTTP against a running server.],
+  [End-to-End], [`test/e2e/`], [28], [Verify all endpoints via HTTP against a running server.],
 )
 
 Total: 152 tests.
@@ -205,7 +205,7 @@ make test-e2e      # E2E (starts server, runs curl, stops server)
 ```bash
 make test-unit          # 99 unit tests
 make test-integration   # 26 integration tests
-make test-e2e           # 27 E2E tests
+make test-e2e           # 28 E2E tests
 ```
 
 == Expected Output
@@ -263,7 +263,7 @@ make docker-test   # Build image, start container, run curl tests, stop
 
 == End-to-End Tests
 
-`e2e_test.sh` (27 tests) starts the server binary, exercises all endpoints via curl, verifies HTTP status codes and response body content, then stops the server:
+`e2e_test.sh` (28 tests) starts the server binary, exercises all endpoints via curl, verifies HTTP status codes and response body content, then stops the server:
 
 - Health, create (3 entries), duplicate, case-insensitive duplicate, get one, get missing, list sorted, update, verify update, update missing, update key mismatch, delete, delete again, bad key, bad JSON, method not allowed (2), unknown path.
 
@@ -332,7 +332,7 @@ Tests are executed via Make targets. A CI pipeline should run:
 1. `make build` -- verify clean compilation.
 2. `make test-unit` -- 99 unit tests.
 3. `make test-integration` -- 26 integration tests.
-4. `make test-e2e` -- 27 E2E tests.
+4. `make test-e2e` -- 28 E2E tests.
 5. `make docker-test` -- build and validate the production image.
 
 = Appendices

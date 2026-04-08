@@ -40,15 +40,27 @@ package body Dictionary.HTTP is
    --  ---------------------------------------------------------------
 
    function Parse_Natural (S : String) return Natural is
-      Result : Natural := 0;
+      Result    : Natural := 0;
+      Got_Digit : Boolean := False;
    begin
       for C of S loop
          if C in '0' .. '9' then
             Result := Result * 10
               + (Character'Pos (C) - Character'Pos ('0'));
-         elsif C /= ' ' then
-            --  Non-digit, non-space: stop.
-            return Result;
+            Got_Digit := True;
+         elsif C = ' ' and then not Got_Digit then
+            --  Leading spaces before digits are acceptable.
+            null;
+         else
+            --  Any non-digit after the first digit (e.g.,
+            --  "12xyz") or non-space before any digit means
+            --  the value is malformed.  Return 0 so the
+            --  request is treated as having no body.
+            if Got_Digit then
+               return 0;
+            else
+               return 0;
+            end if;
          end if;
       end loop;
       return Result;

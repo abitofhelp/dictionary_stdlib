@@ -45,7 +45,11 @@ package Dictionary.JSON is
    --  Parse result — incoming JSON
    --  ---------------------------------------------------------------
 
-   type Parse_Status is (OK, Missing_Key, Missing_Value, Malformed);
+   type Parse_Status is (OK, Malformed);
+   --  The parser extracts whatever fields are present without
+   --  enforcing which fields are required.  Endpoint-specific
+   --  presence rules (e.g., POST requires both key and value,
+   --  PUT requires only value) are enforced by the router.
 
    type Parse_Result is record
       Status    : Parse_Status := Malformed;
@@ -54,12 +58,11 @@ package Dictionary.JSON is
    end record;
 
    function Parse_Entry (Body_Text : String) return Parse_Result;
-   --  Parse {"key":"…","value":"…"} from the request body.
+   --  Extract "key" and "value" fields from a JSON object.
    --  On success, Status = OK and Key_Str / Value_Str hold the
    --  extracted plain-text values (quotes and escapes removed).
-   --  If the "key" field is absent, Status = Missing_Key.
-   --  If the "value" field is absent, Status = Missing_Value.
-   --  If the JSON is structurally broken, Status = Malformed.
+   --  Either field may be empty if absent from the input.
+   --  If no recognizable fields are found, Status = Malformed.
 
    --  ---------------------------------------------------------------
    --  Serialization — outgoing JSON

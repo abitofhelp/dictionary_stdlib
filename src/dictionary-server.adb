@@ -2,6 +2,7 @@
 --  Dictionary.Server — Body
 --  ===================================================================
 
+with Ada.Characters.Handling;
 with Ada.Exceptions;
 with Ada.Streams;
 with Ada.Strings.Unbounded;  use Ada.Strings.Unbounded;
@@ -73,42 +74,155 @@ package body Dictionary.Server is
    is
       use Ada.Streams;
 
+      CRLFCRLF : constant String :=
+        ASCII.CR & ASCII.LF & ASCII.CR & ASCII.LF;
+      CL_Tag   : constant String := "content-length:";
+
       Buf      : Stream_Element_Array (1 .. 4096);
       Last     : Stream_Element_Offset;
       Received : Unbounded_String;
    begin
+      --  Phase 1: accumulate bytes until we find the end-of-headers
+      --  marker (CRLFCRLF) or exceed the buffer limit.
       loop
          Receive_Socket (Client, Buf, Last);
-
-         --  Last < Buf'First means the peer closed the connection.
-         exit when Last < Buf'First;
+         exit when Last < Buf'First;  --  peer closed
 
          Append (Received, To_String (Buf, Last));
-
-         --  Stop reading once we have a complete request or hit
-         --  the size limit.  A complete request has CRLFCRLF
-         --  marking the end of headers.
          exit when Length (Received) >= Max_Request_Size;
 
+         --  Check whether we have the full header block yet.
          declare
-            S : constant String := Ada.Strings.Unbounded.To_String
-              (Received);
+            S : constant String :=
+              Ada.Strings.Unbounded.To_String (Received);
          begin
-            --  Look for end-of-headers.
             for I in S'First .. S'Last - 3 loop
-               if S (I .. I + 3) =
-                 ASCII.CR & ASCII.LF & ASCII.CR & ASCII.LF
-               then
-                  --  Found header end.  Check if we have enough
-                  --  body data.  For simplicity we assume the
-                  --  body arrived in the same read batch.
-                  return S;
+               if S (I .. I + 3) = CRLFCRLF then
+                  --  Headers complete.  Now ensure we have
+                  --  the full body per Content-Length.
+                  goto Headers_Done;
                end if;
             end loop;
          end;
       end loop;
 
+      --  If we exit the loop without finding CRLFCRLF, return
+      --  whatever we have and let the parser reject it.
       return Ada.Strings.Unbounded.To_String (Received);
+
+      <<Headers_Done>>
+
+      --  Phase 2: parse Content-Length from the accumulated
+      --  headers and read any remaining body bytes.
+      --
+      --  TCP is a byte stream — the body may arrive in a
+      --  later packet even though the headers are complete.
+      --  We must not return until we have Content-Length bytes
+      --  after the header-end marker.
+      declare
+         S          : constant String :=
+           Ada.Strings.Unbounded.To_String (Received);
+         Header_End : Natural := 0;
+         CL_Value   : Natural := 0;
+         Body_Start : Natural;
+         Have       : Natural;
+         Need       : Natural;
+      begin
+         --  Find CRLFCRLF position.
+         for I in S'First .. S'Last - 3 loop
+            if S (I .. I + 3) = CRLFCRLF then
+               Header_End := I;
+               exit;
+            end if;
+         end loop;
+
+         --  Scan headers for Content-Length (case-insensitive).
+         declare
+            Hdr : constant String :=
+              S (S'First .. Header_End - 1);
+         begin
+            for I in Hdr'First
+              .. Hdr'Last - CL_Tag'Length + 1
+            loop
+               declare
+                  Match : Boolean := True;
+               begin
+                  for J in CL_Tag'Range loop
+                     if Ada.Characters.Handling.To_Lower
+                          (Hdr (I + J - CL_Tag'First))
+                        /= CL_Tag (J)
+                     then
+                        Match := False;
+                        exit;
+                     end if;
+                  end loop;
+
+                  if Match then
+                     --  Parse the integer value after the tag.
+                     --  Reject malformed values (e.g., "12xyz")
+                     --  by resetting to 0 on trailing garbage,
+                     --  consistent with HTTP.Parse_Natural.
+                     declare
+                        Got_Digit : Boolean := False;
+                     begin
+                        for K in I + CL_Tag'Length
+                          .. Hdr'Last
+                        loop
+                           if Hdr (K) in '0' .. '9' then
+                              CL_Value := CL_Value * 10
+                                + (Character'Pos (Hdr (K))
+                                   - Character'Pos ('0'));
+                              Got_Digit := True;
+                           elsif Hdr (K) = ' '
+                             and then not Got_Digit
+                           then
+                              null;  --  leading space
+                           else
+                              if Got_Digit then
+                                 CL_Value := 0;
+                              end if;
+                              exit;
+                           end if;
+                        end loop;
+                     end;
+                     exit;
+                  end if;
+               end;
+            end loop;
+         end;
+
+         --  If no Content-Length, there is no body to wait for.
+         if CL_Value = 0 then
+            return S;
+         end if;
+
+         Body_Start := Header_End + 4;
+         Have :=
+           (if Body_Start > S'Last
+            then 0
+            else S'Last - Body_Start + 1);
+         Need := CL_Value;
+
+         --  If the body is already complete, return immediately.
+         if Have >= Need then
+            return S;
+         end if;
+
+         --  Continue reading until the body is complete.
+         loop
+            Receive_Socket (Client, Buf, Last);
+            exit when Last < Buf'First;
+
+            Append (Received, To_String (Buf, Last));
+            Have := Have
+              + Natural (Last - Buf'First + 1);
+
+            exit when Have >= Need;
+            exit when Length (Received) >= Max_Request_Size;
+         end loop;
+
+         return Ada.Strings.Unbounded.To_String (Received);
+      end;
    end Read_Request;
 
    --  ---------------------------------------------------------------

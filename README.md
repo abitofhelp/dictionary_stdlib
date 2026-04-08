@@ -166,7 +166,8 @@ readiness. The following are known limitations, not oversights:
 | **Timeouts** | No socket read/write timeouts | `SO_RCVTIMEO` / `SO_SNDTIMEO` or `select()` |
 | **Keep-alive** | `Connection: close` on every response | HTTP/1.1 persistent connections |
 | **Request size** | Fixed 8 KB buffer, no chunked encoding | Streaming parser, chunked transfer |
-| **JSON** | Hand-rolled, minimal escape handling | Production JSON library |
+| **JSON** | Hand-rolled, only `\"` and `\\` escapes | Production JSON library |
+| **HTTP parsing** | Simplified subset; version token not validated | Full HTTP/1.1 compliance |
 | **Persistence** | In-memory only; data lost on restart | Database or file-backed storage |
 | **Logging** | Minimal `Text_IO` to stderr | Structured logging with levels |
 | **Validation** | Basic character checks | Full URI decoding, content-type negotiation |

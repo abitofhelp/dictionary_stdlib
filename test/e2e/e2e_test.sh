@@ -141,10 +141,20 @@ assert_status "GET missing" "404" "$STATUS"
 echo "--- List (sorted) ---"
 parse_response "$(call GET /entries)"
 assert_status "GET /entries" "200" "$STATUS"
-# Verify order: alpha before hello before world
+# Verify order: alpha appears before hello appears before world
 assert_contains "list has alpha" "$BODY" "alpha"
 assert_contains "list has hello" "$BODY" "hello"
 assert_contains "list has world" "$BODY" "world"
+# Verify actual sort order by checking substring positions.
+ALPHA_POS=$(echo "$BODY" | grep -bo "alpha" | head -1 | cut -d: -f1)
+HELLO_POS=$(echo "$BODY" | grep -bo "hello" | head -1 | cut -d: -f1)
+WORLD_POS=$(echo "$BODY" | grep -bo "world" | head -1 | cut -d: -f1)
+if [ "$ALPHA_POS" -lt "$HELLO_POS" ] && [ "$HELLO_POS" -lt "$WORLD_POS" ]; then
+   PASS=$((PASS + 1))
+else
+   FAIL=$((FAIL + 1))
+   echo "  FAIL: list sort order (alpha=$ALPHA_POS hello=$HELLO_POS world=$WORLD_POS)"
+fi
 
 echo "--- Update ---"
 parse_response "$(call PUT /entries/hello '{"key":"hello","value":"Updated greeting"}')"
