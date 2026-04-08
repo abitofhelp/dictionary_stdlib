@@ -1,0 +1,12 @@
+name = "dictionary_stdlib"
+description = "Educational REST service using only the Ada 2022 standard library."
+version = "0.1.0-dev"
+
+authors = ["A Bit of Help, Inc. - Michael Gardner"]
+maintainers = ["A Bit of Help, Inc. - Michael Gardner <mjgardner@abitofhelp.com>"]
+maintainers-logins = ["abitofhelp"]
+licenses = "BSD-3-Clause"
+website = ""
+tags = ["ada", "2022", "kv", "rest", "api", "service", "microservice", "educational"]
+
+executables = ["dictionary_stdlib"]

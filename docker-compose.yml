@@ -1,0 +1,39 @@
+# ============================================================================
+# docker-compose.yml — Dictionary REST Microservice
+# ============================================================================
+# Copyright (c) 2026 Michael Gardner, A Bit of Help, Inc.
+# SPDX-License-Identifier: BSD-3-Clause
+# ============================================================================
+#
+# Usage:
+#   docker compose up --build        Build and start
+#   docker compose up -d             Start in background
+#   docker compose down              Stop and remove
+#   docker compose logs -f           Follow logs
+#
+# Test:
+#   curl http://localhost:8080/health
+#   curl -X POST http://localhost:8080/entries \
+#     -d '{"key":"hello","value":"world"}'
+#
+# ============================================================================
+
+services:
+  dictionary_stdlib:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dictionary_stdlib:latest
+    container_name: dictionary_stdlib
+    ports:
+      - "8080:8080"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      start_period: 2s
+      retries: 3

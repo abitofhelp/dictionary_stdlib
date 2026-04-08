@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <style>
+      .subtitle { font-size: 13.2px; fill: #6c757d; }
+      .file-path { font-size: 14.3px; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; fill: #0d6efd; }
+      .desc { font-size: 14.3px; fill: #333; }
+      .header { font-size: 14.3px; font-weight: 600; fill: #495057; }
+      .row-even { fill: #f8f9fa; }
+      .row-odd { fill: #ffffff; }
+      .header-bg { fill: #e9ecef; }
+      .border { fill: none; stroke: #ced4da; stroke-width: 1; }
+      .divider { stroke: #dee2e6; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- Subtitle -->
+  <text x="450" y="24" text-anchor="middle" class="subtitle">Dictionary_Stdlib  ·  All source files under src/  ·  Sorted ascending</text>
+
+  <!-- Table outline -->
+  <rect x="44" y="40" width="812" height="446" rx="6" ry="6" class="border"/>
+
+  <!-- Header row -->
+  <rect x="44" y="40" width="812" height="40" rx="6" ry="0" class="header-bg"/>
+  <rect x="44" y="40" width="812" height="40" rx="6" ry="0" class="border"/>
+  <text x="66" y="65" class="header">File</text>
+  <text x="440" y="65" class="header">Purpose</text>
+  <line x1="418" y1="40" x2="418" y2="486" class="divider"/>
+
+  <!-- Row 1 (even) -->
+  <rect x="45" y="80" width="810" height="40" class="row-even"/>
+  <text x="66" y="105" class="file-path">dictionary.ads</text>
+  <text x="440" y="105" class="desc">Root namespace package (Pure)</text>
+
+  <!-- Row 2 (odd) -->
+  <rect x="45" y="120" width="810" height="40" class="row-odd"/>
+  <text x="66" y="145" class="file-path">dictionary_main.adb</text>
+  <text x="440" y="145" class="desc">Entry point — starts the server</text>
+
+  <!-- Row 3 (even) -->
+  <rect x="45" y="160" width="810" height="40" class="row-even"/>
+  <text x="66" y="185" class="file-path">dictionary-bounded_text.ads/adb</text>
+  <text x="440" y="185" class="desc">Generic validated bounded text</text>
+
+  <!-- Row 4 (odd) -->
+  <rect x="45" y="200" width="810" height="40" class="row-odd"/>
+  <text x="66" y="225" class="file-path">dictionary-http.ads/adb</text>
+  <text x="440" y="225" class="desc">HTTP/1.1 request parsing, response formatting</text>
+
+  <!-- Row 5 (even) -->
+  <rect x="45" y="240" width="810" height="40" class="row-even"/>
+  <text x="66" y="265" class="file-path">dictionary-json.ads/adb</text>
+  <text x="440" y="265" class="desc">Hand-rolled JSON parse and serialize</text>
+
+  <!-- Row 6 (odd) -->
+  <rect x="45" y="280" width="810" height="40" class="row-odd"/>
+  <text x="66" y="305" class="file-path">dictionary-router.ads/adb</text>
+  <text x="440" y="305" class="desc">Static dispatch route matching and handlers</text>
+
+  <!-- Row 7 (even) -->
+  <rect x="45" y="320" width="810" height="40" class="row-even"/>
+  <text x="66" y="345" class="file-path">dictionary-server.ads/adb</text>
+  <text x="440" y="345" class="desc">TCP listener + task-per-connection</text>
+
+  <!-- Row 8 (odd) -->
+  <rect x="45" y="360" width="810" height="40" class="row-odd"/>
+  <text x="66" y="385" class="file-path">dictionary-store.ads/adb</text>
+  <text x="440" y="385" class="desc">Thread-safe store (protected + Ordered_Maps)</text>
+
+  <!-- Row 9 (even) -->
+  <rect x="45" y="400" width="810" height="40" class="row-even"/>
+  <text x="66" y="425" class="file-path">dictionary-types.ads</text>
+  <text x="440" y="425" class="desc">Key/Value types, records, status enums</text>
+
+  <!-- Row 10 (odd) -->
+  <rect x="45" y="440" width="810" height="46" class="row-odd"/>
+  <text x="66" y="468" class="file-path">dictionary-validation.ads/adb</text>
+  <text x="440" y="468" class="desc">Character and string predicates</text>
+
+  <!-- Row dividers -->
+  <line x1="45" y1="80" x2="855" y2="80" class="divider"/>
+  <line x1="45" y1="120" x2="855" y2="120" class="divider"/>
+  <line x1="45" y1="160" x2="855" y2="160" class="divider"/>
+  <line x1="45" y1="200" x2="855" y2="200" class="divider"/>
+  <line x1="45" y1="240" x2="855" y2="240" class="divider"/>
+  <line x1="45" y1="280" x2="855" y2="280" class="divider"/>
+  <line x1="45" y1="320" x2="855" y2="320" class="divider"/>
+  <line x1="45" y1="360" x2="855" y2="360" class="divider"/>
+  <line x1="45" y1="400" x2="855" y2="400" class="divider"/>
+  <line x1="45" y1="440" x2="855" y2="440" class="divider"/>
+
+</svg>

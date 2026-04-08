@@ -1,0 +1,35 @@
+--  Unit test project for the Dictionary microservice.
+--  Builds the unit_runner executable that exercises all packages.
+
+with "../../dictionary_stdlib.gpr";
+
+project Unit_Tests is
+
+   for Source_Dirs use ("src/", "../common/");
+   for Object_Dir use "obj";
+   for Create_Missing_Dirs use "True";
+   for Exec_Dir use "../bin";
+   for Main use ("unit_runner.adb");
+
+   package Builder is
+      for Executable ("unit_runner.adb") use "unit_runner";
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        ("-g",
+         "-gnatwa",
+         "-gnatVa",
+         "-gnaty3",
+         "-gnatyb",
+         "-gnatye",
+         "-gnatyk",
+         "-gnatym",
+         "-gnatW8");
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es");
+   end Binder;
+
+end Unit_Tests;
