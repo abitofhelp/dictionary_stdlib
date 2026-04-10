@@ -17,7 +17,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // ============================================================================
 
-#import "core.typ": formal_doc, change_history_table
+#import "core.typ": formal_doc
 
 #let doc = (
   authors: ("Michael Gardner",),
@@ -373,9 +373,3 @@ Image size: ~93 MB.
 - Custom `Test_Framework` package (assert, report, pass/fail counts, exit code).
 - Separate GPR per suite (`test/unit/unit_tests.gpr`, `test/integration/integration_tests.gpr`).
 - E2E uses a shell script (`test/e2e/e2e_test.sh`) that starts the server, runs curl, and verifies status codes.
-
-= Appendices
-
-== Change History
-
-#change_history_table(change_history)

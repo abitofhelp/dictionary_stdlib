@@ -17,7 +17,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // ============================================================================
 
-#import "core.typ": formal_doc, change_history_table
+#import "core.typ": formal_doc
 
 #let doc = (
   title: "Software Test Guide",
@@ -54,8 +54,6 @@
 )
 
 #show: formal_doc.with(doc, profile, change_history)
-
-#set heading(numbering: "1.1.")
 
 = Introduction
 
@@ -334,9 +332,3 @@ Tests are executed via Make targets. A CI pipeline should run:
 3. `make test-integration` -- 26 integration tests.
 4. `make test-e2e` -- 28 E2E tests.
 5. `make docker-test` -- build and validate the production image.
-
-= Appendices
-
-== Change History
-
-#change_history_table(change_history)

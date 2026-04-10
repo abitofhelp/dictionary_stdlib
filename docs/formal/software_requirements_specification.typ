@@ -17,7 +17,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // ============================================================================
 
-#import "core.typ": change_history_table, formal_doc
+#import "core.typ": formal_doc
 
 #let doc = (
   authors: ("Michael Gardner",),
@@ -53,7 +53,27 @@
   ),
 )
 
-#show: formal_doc.with(doc, profile, change_history)
+// Extra appendix subsections rendered before the auto-appended Change History.
+#let extra_appendices = [
+  == Appendix A: Package Responsibilities
+
+  // Sort rows alphabetically by the first column.
+  #table(
+    columns: (auto, 1fr),
+    table.header([*Package*], [*Responsibility*]),
+    [Dictionary], [Root namespace (Pure, empty).],
+    [Dictionary.Bounded_Text], [Generic validated bounded text with normalization.],
+    [Dictionary.HTTP], [HTTP/1.1 request parsing and response formatting.],
+    [Dictionary.JSON], [Hand-rolled JSON parse and serialize.],
+    [Dictionary.Router], [Static dispatch route matching and handlers.],
+    [Dictionary.Server], [TCP listener and task-per-connection.],
+    [Dictionary.Store], [Thread-safe CRUD store (protected + Ordered_Maps).],
+    [Dictionary.Types], [Key/Value instantiations, Entry_Record, Store_Status.],
+    [Dictionary.Validation], [Character and string predicates with contracts.],
+  )
+]
+
+#show: formal_doc.with(doc, profile, change_history, extra_appendix_body: extra_appendices)
 
 = Introduction
 
@@ -75,6 +95,7 @@ This project intentionally omits production-level features (TLS, persistent stor
 
 == Definitions and Acronyms
 
+// Sort rows alphabetically by the first column.
 #table(
   columns: (auto, 1fr),
   table.header([*Term*], [*Definition*]),
@@ -147,6 +168,7 @@ The service has no external dependencies beyond the Ada 2022 standard library an
 
 == User Classes
 
+// Sort rows alphabetically by the first column.
 #table(
   columns: (auto, 1fr),
   table.header([*User Class*], [*Description*]),
@@ -175,6 +197,7 @@ The service has no external dependencies beyond the Ada 2022 standard library an
 
 == Constraints
 
+// Sort rows alphabetically by the first column.
 #table(
   columns: (auto, 1fr),
   table.header([*Constraint*], [*Rationale*]),
@@ -204,6 +227,7 @@ The service has no graphical interface. All interaction is through HTTP requests
 
 === REST API
 
+// Sort rows alphabetically by the first column.
 #table(
   columns: (auto, auto, auto, auto),
   table.header([*Method*], [*Path*], [*Purpose*], [*Status Codes*]),
@@ -450,25 +474,3 @@ dictionary_main -> server -> router -> http, json, store, validation -> types ->
   [FR-06.1--FR-06.2], [E2E Tests], [e2e_test.sh],
   [NFR-06.1--NFR-06.4], [Docker Tests], [make docker-test],
 )
-
-= Appendices
-
-== Appendix A: Package Responsibilities
-
-#table(
-  columns: (auto, 1fr),
-  table.header([*Package*], [*Responsibility*]),
-  [Dictionary], [Root namespace (Pure, empty).],
-  [Dictionary.Bounded_Text], [Generic validated bounded text with normalization.],
-  [Dictionary.HTTP], [HTTP/1.1 request parsing and response formatting.],
-  [Dictionary.JSON], [Hand-rolled JSON parse and serialize.],
-  [Dictionary.Router], [Static dispatch route matching and handlers.],
-  [Dictionary.Server], [TCP listener and task-per-connection.],
-  [Dictionary.Store], [Thread-safe CRUD store (protected + Ordered_Maps).],
-  [Dictionary.Types], [Key/Value instantiations, Entry_Record, Store_Status.],
-  [Dictionary.Validation], [Character and string predicates with contracts.],
-)
-
-== Appendix B: Change History
-
-#change_history_table(change_history)
